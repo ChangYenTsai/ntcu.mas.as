@@ -509,7 +509,7 @@ public class UI extends JFrame{
 												StringBuffer sbl = new StringBuffer();
 												sbl.append(line3);
 												sbl.reverse();
-												String Location = sbl.substring(sbl.indexOf("(") + 1, sbl.indexOf(":"));
+												String Location = sbl.substring(sbl.indexOf("(") + 1, sbl.indexOf(space));
 
 												StringBuffer sbl2 = new StringBuffer();
 												sbl2.append(Location);
