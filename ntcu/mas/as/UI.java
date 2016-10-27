@@ -14,6 +14,7 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Comparator;
 
@@ -202,19 +203,23 @@ public class UI extends JFrame{
 								//filter method name
 								if (!line2.isEmpty() && line2.charAt(0)=='+'){
 									for (String token: tokens) {
-											if (token.contains("(") == true &&
-												token.contains(");") == true &&
-												token.contains("+") == false &&
-												token.contains("-") == false &&
-												token.contains("*") == false &&
-												token.contains("/") == false &&
-												token.contains("|") == false &&
-												token.contains("&") == false &&
-												token.contains("%") == false &&
-												token.contains("!") == false &&
-												token.contains("?") == false &&
-												token.contains("get") == false &&
-												token.contains("set") == false &&
+											if (token.contains("(") &&
+												token.contains(");") &&
+												!token.contains("+") &&
+												!token.contains("-") &&
+												!token.contains("*") &&
+												!token.contains("/") &&
+												!token.contains("|") &&
+												!token.contains("&") &&
+												!token.contains("%") &&
+												!token.contains("!") &&
+												!token.contains("?") &&
+												!token.contains("get") &&
+												!token.contains("set") &&
+												!token.contains("super") &&
+												!token.contains("execute") &&
+												!token.contains("println") &&
+												!token.contains("length") &&																								
 												!Character.isUpperCase(token.charAt(0))) {
 													int state = 1;
 //													storeMethod.add("(Add)M: " + token);
@@ -272,19 +277,23 @@ public class UI extends JFrame{
 									}
 								} else if(!line2.isEmpty() && line2.charAt(0)=='-'){
 									for (String token: tokens) {
-										if (token.contains("(") == true &&
-											token.contains(");") == true &&
-											token.contains("+") == false &&
-											token.contains("-") == false &&
-											token.contains("*") == false &&
-											token.contains("/") == false &&
-											token.contains("|") == false &&
-											token.contains("&") == false &&
-											token.contains("%") == false &&
-											token.contains("!") == false &&
-											token.contains("?") == false &&
-											token.contains("get") == false &&
-											token.contains("set") == false &&
+										if (token.contains("(") &&
+											token.contains(");") &&
+											!token.contains("+") &&
+											!token.contains("-") &&
+											!token.contains("*") &&
+											!token.contains("/") &&
+											!token.contains("|") &&
+											!token.contains("&") &&
+											!token.contains("%") &&
+											!token.contains("!") &&
+											!token.contains("?") &&
+											!token.contains("get") &&
+											!token.contains("set") &&
+											!token.contains("super") &&
+											!token.contains("execute") &&
+											!token.contains("println") &&
+											!token.contains("length") &&	
 											!Character.isUpperCase(token.charAt(0))) {
 												int state = 1;
 //												storeMethod.add("(Del)M: " + token);
@@ -572,18 +581,10 @@ public class UI extends JFrame{
 											} else {
 												n = size2; //to stop loop
 											}
-										}
-										
-										
-									}
-									
-									
+										}																
+									}																
 								}
-								
-								
-								
-								
-								
+							
 							try {
 								line3 = br.readLine();
 							} catch (IOException e1) {
@@ -604,7 +605,7 @@ public class UI extends JFrame{
 
 		    	    }
 					
-					
+				ArrayList<MethodLocation> resultOutput = new ArrayList<MethodLocation>();
 				for (int cM=0; cM<countMethod; cM++){
 //					System.out.print("M: "+storeMethod.get(cM).get(0));
 					int count=1;
@@ -613,11 +614,21 @@ public class UI extends JFrame{
 						count++;
 					}
 					int sol = count-1;
+					resultOutput.add(new MethodLocation(storeMethod.get(cM).get(0), sol));
+									
 //					System.out.println("");
-					System.out.println("M:"+storeMethod.get(cM).get(0)+" L:"+sol);
+//					System.out.println("M:"+storeMethod.get(cM).get(0)+" L:"+sol);
 //					System.out.println("");
 				}
+				
+				Collections.sort(resultOutput, MethodLocation.MethodSort);
+				
+				for (MethodLocation end: resultOutput) {
+					System.out.println(end);
+				}
+				
 				System.out.println("Analysis Complete.");
+				
 				}
 			}			
 		});	
