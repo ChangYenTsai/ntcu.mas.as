@@ -24,9 +24,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 
 
 public class UI extends JFrame{	
@@ -43,6 +46,9 @@ public class UI extends JFrame{
 //	private int endFile = 1;
 	private String storeEndName = null;
 	private String storeReverseName = null;
+	
+	private JTabbedPane tp;
+	private JTextArea textArea;
 	
 //	private Timer timer = null;
 //	private int runTimeSec = 0;
@@ -70,7 +76,7 @@ public class UI extends JFrame{
 	public UI () {
 		setTitle("MAS v0.2");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 510, 140);
+		setBounds(100, 100, 510, 510);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -622,11 +628,16 @@ public class UI extends JFrame{
 				}
 				
 				Collections.sort(resultOutput, MethodLocation.MethodSort);
+
+				for (int i=0; i<30; i++) {
+					System.out.println(resultOutput.get(i));
+				}
 				
+				/*				
 				for (MethodLocation end: resultOutput) {
 					System.out.println(end);
 				}
-				
+*/				
 				System.out.println("Analysis Complete.");
 				
 				}
@@ -639,10 +650,21 @@ public class UI extends JFrame{
         timeLabel.setFont(new Font("微軟正黑體", Font.PLAIN, 14));
         timeLabel.setBounds(370, 40, 110, 20);
 */		
+		
+		textArea = new JTextArea();
+		textArea.setFont(new Font("微軟正黑體", Font.PLAIN, 15));
+		
+		tp = new JTabbedPane();
+        tp.addTab("Result", createJScrollPane1(textArea));
+ 
+        tp.setBounds(10, 50, 470, 400);
+		
+		
 		contentPane.add(btnSelect);
 		contentPane.add(btnReverse);
 		contentPane.add(btnParse);
 		contentPane.add(btnAnalyse);
+		contentPane.add(tp);
 //		contentPane.add(timeLabel);
 /*		
 		timer = new Timer(1000, new ActionListener(){      
@@ -653,6 +675,18 @@ public class UI extends JFrame{
             }
         });
 */
+	}
+	
+	private JScrollPane createJScrollPane1(JTextArea textArea){
+        JScrollPane scr = new JScrollPane(textArea,
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);// Add your text area to scroll pane 
+        textArea.setBounds(5, 35, 385, 330);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        scr.setBounds(20, 70, 760, 355);// You have to set bounds for all the controls and containers incaseof null layout
+        
+        return scr;
 	}
 	
 	public void StoreReverse(List<String> storeLine) {		

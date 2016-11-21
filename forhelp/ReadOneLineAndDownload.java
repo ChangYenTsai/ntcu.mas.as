@@ -24,7 +24,7 @@ public class ReadOneLineAndDownload {
 		// Open the file
 		FileInputStream fstream = null;
 		try {
-			fstream = new FileInputStream("1.6.4.txt");
+			fstream = new FileInputStream("1.6.0.txt");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -48,7 +48,7 @@ public class ReadOneLineAndDownload {
 			  {
 			   String strUrl = "https://github.com/apache/ant/commit/"+ strLine + ".patch";
 			   URL source = new URL(strUrl);
-			   String theStrDestDir = "D:\\Eclipse\\Eclipse_Neon\\workspace\\ntcu.mas.as\\ant_versions\\1.6.4\\";
+			   String theStrDestDir = "D:\\Eclipse\\Eclipse_Neon\\workspace\\ntcu.mas.as\\ant_versions\\1.6.0\\";
 			   File theStockDest = new File(theStrDestDir);
 			   FileUtils.forceMkdir(theStockDest);
 			   
