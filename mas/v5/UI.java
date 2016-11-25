@@ -5,28 +5,20 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Comparator;
 
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
@@ -50,7 +42,7 @@ public class UI extends JFrame{
 		
 	protected ArrayList<ArrayList<String>> storeMethod = new ArrayList<ArrayList<String>>();
 	protected ArrayList<ArrayList<String>> storeAnalyzedMethod = new ArrayList<ArrayList<String>>();
-	protected ArrayList<ArrayList<String>> storeWholeSentence = new ArrayList<ArrayList<String>>();
+	static protected ArrayList<ArrayList<String>> storeWholeSentence = new ArrayList<ArrayList<String>>();
 	static protected int countMethod;
 	protected int checkIfSame = 0;
 	
@@ -69,6 +61,7 @@ public class UI extends JFrame{
 	static protected String fcs2 = new String(System.getProperty("user.dir"));
 	static protected File fcf2 = new File(System.getProperty("user.dir"));
 	private File[] endFile = new File(fcf2 + "\\endFile").listFiles();
+	static protected StringBuilder storeResultOutput = new StringBuilder();
 	
 	public static void main(String[] args){
 		EventQueue.invokeLater(new Runnable() {
@@ -84,7 +77,7 @@ public class UI extends JFrame{
 	}
 	
 	public UI () {
-		setTitle("MAS v0.2");
+		setTitle("MAS v0.5");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 510, 530);
 		contentPane = new JPanel();
@@ -169,7 +162,9 @@ public class UI extends JFrame{
 					
 					//count location number
 					taskOutput = new TaskOutput();
-					taskOutput.countAndOutput(storeAnalyzedMethod);
+					storeResultOutput = taskOutput.countAndOutput(storeAnalyzedMethod);
+					
+					textArea.setText(storeResultOutput.toString());
 				} else {
 					JOptionPane.showMessageDialog(UI.this,
 							"Please select package path!",
@@ -224,33 +219,25 @@ public class UI extends JFrame{
 			}			
 		});
 */		
-		
-		
-		
-
 /*		
 		timeLabel = new JLabel("00:00");
         timeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         timeLabel.setFont(new Font("微軟正黑體", Font.PLAIN, 14));
         timeLabel.setBounds(370, 40, 110, 20);
-*/		
-		
+*/				
 		textArea = new JTextArea();
 		textArea.setEditable(false);
-		textArea.setFont(new Font("微軟正黑體", Font.PLAIN, 15));
-//		textArea.setBounds(10, 70, 470, 400);
+		textArea.setFont(new Font("微軟正黑體", Font.PLAIN, 12));
 		
 		scrollPane = new JScrollPane(textArea);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.setBounds(10, 70, 470, 400);
-		
 /*		
 		tp = new JTabbedPane();
         tp.addTab("Result", createJScrollPane1(textArea));
-        tp.setBounds(10, 70, 470, 400);
+        tp.setBounds(10, 70, 470, 400);		
 */		
-		
 		contentPane.add(btnSelect);
 		contentPane.add(btnParse);
 //		contentPane.add(btnAnalyse);
@@ -269,15 +256,14 @@ public class UI extends JFrame{
 	}
 /*	
 	private JScrollPane createJScrollPane1(JTextArea textArea){
-        JScrollPane scr = new JScrollPane(textArea,
+		scrollPane = new JScrollPane(textArea,
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);// Add your text area to scroll pane 
-//        textArea.setBounds(10, 70, 470, 400);
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
-        scr.setBounds(10, 70, 470, 400);// You have to set bounds for all the controls and containers in case of null layout
+        scrollPane.setBounds(10, 70, 470, 400);// You have to set bounds for all the controls and containers incaseof null layout
         
-        return scr;
+        return scrollPane;
 	}
 */	
 	public void StoreReverse(List<String> storeLine) {		

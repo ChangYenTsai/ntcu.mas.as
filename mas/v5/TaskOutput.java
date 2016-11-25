@@ -10,7 +10,7 @@ import javax.swing.JTextArea;
 public class TaskOutput extends UI{	
 	private ArrayList<MethodLocation> resultOutput = new ArrayList<MethodLocation>();
 	
-	public JTextArea countAndOutput(ArrayList<ArrayList<String>> storeMethod) {
+	public StringBuilder countAndOutput(ArrayList<ArrayList<String>> storeMethod) {
 
 		//to count the location number of specified method
 		for (int cM=0; cM<countMethod; cM++){
@@ -29,11 +29,10 @@ public class TaskOutput extends UI{
 		Collections.sort(resultOutput, MethodLocation.MethodSort);		
 		
 		//output how many result
-		List<String> storeResultOutput = new List<String>();
 		int outputNumber = 30;
 		for (int i=0; i<outputNumber; i++) {
 			System.out.println(resultOutput.get(i));
-			
+			storeResultOutput.append(resultOutput.get(i).toString() + "\n");
 			
 			//to find resultOutput's method in storeWholeSentence's method and match
 			for (int j=0; j<storeWholeSentence.size()-1; j++) {
@@ -60,17 +59,18 @@ public class TaskOutput extends UI{
 					
 					//output format
 					for (Map.Entry<String, Integer> entry : map.entrySet()) {
-//						if (entry.getValue()>10) {
+						if (entry.getValue() > 10) {
 							System.out.println("Key: " + entry.getKey() + " Value: " + entry.getValue());
-//						}
+							storeResultOutput.append("Key: " + entry.getKey() + " Value: " + entry.getValue() + "\n");
+						}
 					}				
 				}
 			}
-			
+			storeResultOutput.append("\n");
 		}
 		
 		System.out.println("Output " + outputNumber + " results.");
-		return textArea;
+		return storeResultOutput;
 	}
 	
 }
