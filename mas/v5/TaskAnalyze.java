@@ -10,8 +10,11 @@ import java.util.Collections;
 
 public class TaskAnalyze extends UI{
 	
-	public void analyze() {
-	    
+	private File[] endFile = new File(fcf2 + "\\endFile").listFiles();
+	
+	
+	public ArrayList<ArrayList<String>> analyze(ArrayList<ArrayList<String>> storeMethod) {
+
 		//read file one by one
 		for (final File entry3 : endFile) {
         	BufferedReader br = null;
@@ -53,20 +56,11 @@ public class TaskAnalyze extends UI{
 						if (checkIfSame == 0) {
 							storeMethod.add(new ArrayList<String>());
 							storeMethod.get(countMethod).add("");
-						}
-						int size = storeMethod.size();
-//						int size2 = storeMethod.get(countMethod).size();			
-															
-//						System.out.println(entry3.getName());
-//						System.out.println(size);
-						
+						}						
 						
 						//check same method or not
-						for (int m=0; m<size; m++) {
+						for (int m=0; m<storeMethod.size(); m++) {
 //							storeMethod.add(new ArrayList<String>());
-//							System.out.println(storeMethod.get(m).get(0));
-//							System.out.println(storeMethod.get(m).get(0));
-//							System.out.println(sbm2.toString());
 							
 							if (storeMethod.get(m).get(0).equals(sbm2.toString()) && temp!=1) {											
 //								System.out.println("***same***");
@@ -98,7 +92,7 @@ public class TaskAnalyze extends UI{
 								}
 								
 								
-							} else if (m+1==size && temp!=1) {
+							} else if (m+1==storeMethod.size() && temp!=1) {
 //								System.out.println("***not same***");
 								try {
 									line3 = br.readLine();
@@ -123,7 +117,8 @@ public class TaskAnalyze extends UI{
 									for (int n=0; n<allLocation; n++) {
 										System.out.println(storeMethod.get(countMethod).get(allLocation));
 									}
-*/												countMethod++;
+*/									
+									countMethod++;
 								}
 								checkIfSame = 0;
 							}
@@ -200,6 +195,8 @@ public class TaskAnalyze extends UI{
 				}
     		}
 	    }
+		System.out.println("Analyzing done.");
+		return storeMethod;
 	}
 	
 	

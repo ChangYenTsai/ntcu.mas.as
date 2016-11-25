@@ -22,14 +22,17 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
+
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 
 
 public class UI extends JFrame{	
@@ -45,28 +48,29 @@ public class UI extends JFrame{
 	static protected String storeEndName = null;
 	static protected String storeReverseName = null;
 		
-	static protected ArrayList<ArrayList<String>> storeMethod = new ArrayList<ArrayList<String>>();
-	static protected int countMethod = 0;
-	static protected int checkIfSame = 0;	
+	protected ArrayList<ArrayList<String>> storeMethod = new ArrayList<ArrayList<String>>();
+	protected ArrayList<ArrayList<String>> storeAnalyzedMethod = new ArrayList<ArrayList<String>>();
+	protected ArrayList<ArrayList<String>> storeWholeSentence = new ArrayList<ArrayList<String>>();
+	static protected int countMethod;
+	protected int checkIfSame = 0;
 	
-	private JTabbedPane tp;
-	private JTextArea textArea;
+//	private JTabbedPane tp;
+	protected JTextArea textArea;
+	private JScrollPane scrollPane;
 	
 	private TaskSelect taskSelect;
 	private TaskReverse taskReverse;
 	private TaskParse taskParse;
 	private TaskAnalyze taskAnalyze;
-	private TaskCount taskCount;
+	private TaskOutput taskOutput;
 	
 	static protected String fcs = new String(System.getProperty("user.dir"));
 	static protected File fcf = new File(System.getProperty("user.dir"));	
 	static protected String fcs2 = new String(System.getProperty("user.dir"));
 	static protected File fcf2 = new File(System.getProperty("user.dir"));
-	static protected File[] endFile = new File(fcf2 + "\\endFile").listFiles();
-	static protected ArrayList<MethodLocation> resultOutput = new ArrayList<MethodLocation>();
+	private File[] endFile = new File(fcf2 + "\\endFile").listFiles();
 	
-	public static void main(String[] args){		
-
+	public static void main(String[] args){
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -82,7 +86,7 @@ public class UI extends JFrame{
 	public UI () {
 		setTitle("MAS v0.2");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 510, 510);
+		setBounds(100, 100, 510, 530);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -100,45 +104,42 @@ public class UI extends JFrame{
 		});
 		
 		
-		JButton btnReverse = new JButton("Reversing");
-		btnReverse.setFont(new Font("微軟正黑體", Font.PLAIN, 12));
-		btnReverse.setBounds(130, 10, 110, 20);
-		btnReverse.addActionListener(new ActionListener() {
+		JButton btnParse = new JButton("Parsing");
+		btnParse.setFont(new Font("微軟正黑體", Font.PLAIN, 12));
+		btnParse.setBounds(130, 10, 110, 20);
+		btnParse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				//Reversing start
 				if(filePath!=null){
 					taskReverse = new TaskReverse();
 					taskReverse.reverseContent();
 					
+				} else {
+					JOptionPane.showMessageDialog(UI.this,
+							"Please select package path!",
+						    "No path error",
+						    JOptionPane.ERROR_MESSAGE);
 				}
-			}			
-		});
-		
-		
-		JButton btnParse = new JButton("Parsing");
-		btnParse.setFont(new Font("微軟正黑體", Font.PLAIN, 12));
-		btnParse.setBounds(250, 10, 110, 20);
-		btnParse.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
 				
-	        	fcs = fcs + "\\reverseFile";
+				//Parsing start
+				fcs = fcs + "\\reverseFile";
 				
 				if(fcs!=null){			
 					taskParse = new TaskParse();
-					taskParse.parsing();					
+					storeWholeSentence = taskParse.parsing(storeWholeSentence);
+				} else {
+					JOptionPane.showMessageDialog(UI.this,
+							"Please select package path!",
+						    "No path error",
+						    JOptionPane.ERROR_MESSAGE);
 				}
-			}
-		});
-		
-		
-		JButton btnAnalyse = new JButton("Analyzing");
-		btnAnalyse.setFont(new Font("微軟正黑體", Font.PLAIN, 12));
-		btnAnalyse.setBounds(370, 10, 110, 20);
-		btnAnalyse.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+				
+				//Analyzing start
 				fcs2 = fcs2 + "\\endFile";
 				
 				if(fcs2!=null){
+					
 					//read file in reverse numerical
 					Arrays.sort(endFile, new Comparator<File>() {
 			            @Override
@@ -164,24 +165,68 @@ public class UI extends JFrame{
 					
 					//analyzing
 					taskAnalyze = new TaskAnalyze();
-					taskAnalyze.analyze();
+					storeAnalyzedMethod = taskAnalyze.analyze(storeMethod);
 					
 					//count location number
-					taskCount = new TaskCount();
-					taskCount.countLocation();
+					taskOutput = new TaskOutput();
+					taskOutput.countAndOutput(storeAnalyzedMethod);
+				} else {
+					JOptionPane.showMessageDialog(UI.this,
+							"Please select package path!",
+						    "No path error",
+						    JOptionPane.ERROR_MESSAGE);
+				}
+				
+			}
+		});
+		
+/*		
+		JButton btnAnalyse = new JButton("Analyzing");
+		btnAnalyse.setFont(new Font("微軟正黑體", Font.PLAIN, 12));
+		btnAnalyse.setBounds(250, 10, 110, 20);
+		btnAnalyse.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				fcs2 = fcs2 + "\\endFile";
+				
+				if(fcs2!=null){
 					
-					//sort number descending
-					Collections.sort(resultOutput, MethodLocation.MethodSort);
+					//read file in reverse numerical
+					Arrays.sort(endFile, new Comparator<File>() {
+			            @Override
+			            public int compare(File o1, File o2) {
+			                int n1 = extractNumber(o1.getName());
+			                int n2 = extractNumber(o2.getName());
+			                return n2 - n1;
+			            }
+			            private int extractNumber(String name) {
+			                int i = 0;
+			                try {
+			                    int s = name.indexOf('_')+1;
+			                    int e = name.lastIndexOf('.');
+			                    String number = name.substring(s, e);
+			                    i = Integer.parseInt(number);
+			                } catch(Exception e) {
+			                    i = 0; // if filename does not match the format
+			                           // then default to 0
+			                }
+			                return i;
+			            }
+			        });
 					
-					//output how many result
-					for (int i=0; i<30; i++) {
-						System.out.println(resultOutput.get(i));
-					}
+					//analyzing
+					taskAnalyze = new TaskAnalyze();
+					storeAnalyzedMethod = taskAnalyze.analyze(storeMethod);
 					
-					System.out.println("Analysis Complete.");				
+					//count location number
+					taskOutput = new TaskOutput();
+					taskOutput.countAndOutput(storeAnalyzedMethod);				
 				}
 			}			
-		});	
+		});
+*/		
+		
+		
+		
 
 /*		
 		timeLabel = new JLabel("00:00");
@@ -191,19 +236,26 @@ public class UI extends JFrame{
 */		
 		
 		textArea = new JTextArea();
+		textArea.setEditable(false);
 		textArea.setFont(new Font("微軟正黑體", Font.PLAIN, 15));
+//		textArea.setBounds(10, 70, 470, 400);
 		
+		scrollPane = new JScrollPane(textArea);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPane.setBounds(10, 70, 470, 400);
+		
+/*		
 		tp = new JTabbedPane();
         tp.addTab("Result", createJScrollPane1(textArea));
- 
-        tp.setBounds(10, 50, 470, 400);
-		
+        tp.setBounds(10, 70, 470, 400);
+*/		
 		
 		contentPane.add(btnSelect);
-		contentPane.add(btnReverse);
 		contentPane.add(btnParse);
-		contentPane.add(btnAnalyse);
-		contentPane.add(tp);
+//		contentPane.add(btnAnalyse);
+		contentPane.add(scrollPane);
+//		contentPane.add(tp);
 //		contentPane.add(timeLabel);
 /*		
 		timer = new Timer(1000, new ActionListener(){      
@@ -215,19 +267,19 @@ public class UI extends JFrame{
         });
 */
 	}
-	
+/*	
 	private JScrollPane createJScrollPane1(JTextArea textArea){
         JScrollPane scr = new JScrollPane(textArea,
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);// Add your text area to scroll pane 
-        textArea.setBounds(5, 35, 385, 330);
+//        textArea.setBounds(10, 70, 470, 400);
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
-        scr.setBounds(20, 70, 760, 355);// You have to set bounds for all the controls and containers incaseof null layout
+        scr.setBounds(10, 70, 470, 400);// You have to set bounds for all the controls and containers in case of null layout
         
         return scr;
 	}
-	
+*/	
 	public void StoreReverse(List<String> storeLine) {		
 		  File saveFile = new File(fcs + "\\reverseFile\\"+storeReverseName);
 		  try
@@ -235,18 +287,15 @@ public class UI extends JFrame{
 			  fwriter = new FileWriter(saveFile);
 			  for (String str: storeLine) {
 				  fwriter.write(str);
-				  fwriter.append("\n");
-//				  fwriter.close();				  
+				  fwriter.append("\n");				  
 			  }			  
 			  fwriter.close();
-//			  System.out.println(timer.isRunning());
 			  System.out.println(storeReverseName + " Done.");
 		  }
 		  catch(Exception e)
 		  {
 			  e.printStackTrace();
 		  }
-//		  tmpFile++;
 	  }
 	
 	public void CutMethod(List<String> storeLine)
@@ -258,7 +307,6 @@ public class UI extends JFrame{
 			  for (String str: storeLine) {
 				  fwriter.write(str);
 				  fwriter.append("\n");
-//				  fwriter.close();
 			  }			  
 			  fwriter.close();
 			  System.out.println(storeEndName + " Done.");
@@ -267,7 +315,6 @@ public class UI extends JFrame{
 		  {
 			  e.printStackTrace();
 		  }
-//		  endFile++;
 	  }
 /*	
 	public void FileCatch() {

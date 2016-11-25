@@ -59,7 +59,7 @@ public class TaskReverse extends UI{
 				}
     		}
 		}
-	System.out.println("All done.");		
+	System.out.println("Reversing done.");		
 	}
 	
 }
